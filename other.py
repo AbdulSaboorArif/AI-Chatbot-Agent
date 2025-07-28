@@ -222,165 +222,19 @@
 #     asyncio.run(main())
 
 
-import os
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, set_default_openai_client
-import asyncio # Important: import asyncio for running async functions
-import nest_asyncio # Import nest_asyncio to handle nested event loops
-from agents.run import RunConfig
-from dotenv import load_dotenv, find_dotenv
-nest_asyncio.apply()
-load_dotenv(find_dotenv())
-
-gemini_api_key = os.getenv("GEMINI_API_KEY")
-if not gemini_api_key:
-    raise ValueError("GEMINI_API_KEY is not set in the environment variables.")
-
-
-# Provider
-external_provider = AsyncOpenAI(
-    api_key = gemini_api_key,
-    base_url = "https://generativelanguage.googleapis.com/v1beta/openai/",
-)
-
-
-# Model
-model = OpenAIChatCompletionsModel(
-    model = "gemini-2.5-flash",
-    openai_client = external_provider,
-)
-
-config = RunConfig(
-    model = model,
-    model_provider = external_provider,
-    tracing_disabled=True,
-)
-
-
-# AI Agent
-ai_agent = Agent(
-    name = "AI_Agent",
-    instructions = "You are a specialized agent for Artifical Intelligence queries.",
-    model = model,
-)
-
-# Block Chain Agent
-block_chain_agent = Agent(
-    name = "Block_Chain_Agent",
-    instructions = "You are a specialized agent for Block Chain queries.",
-    model = model,
-)
-
-# Cyber Agent
-cyber_agent = Agent(
-    name = "Cyber_Agent",
-    instructions = "You are a specialized agent for cyber security queries.",
-    model = model,
-)
-
-# Agent
-orchestrator_agent = Agent(
-    name = "orchestrator_agent",
-    instructions = "You are a orchestrator agent have a agents-tool to use it accordingly to the user need",
-    tools=[
-        ai_agent.as_tool(
-            tool_name = "AI_Agent",
-            tool_description = "You are a ai agent to solve ai related queries",
-        ),
-        block_chain_agent.as_tool(
-            tool_name = "Block_Chain_Agent",
-            tool_description = "You are a block chain agent to solve block chain related queries",
-        ),
-        cyber_agent.as_tool(
-            tool_name = "Cyber_Agent",
-            tool_description = "You are a cyber agent to solve cyber security related queries",
-        ),
-    ],
-)
-
-
-# Runner
-async def main():
-    result = await Runner.run(orchestrator_agent, "What is the block chain Intelligence and cyber security give me in seperatly", run_config=config)
-    print(result.final_output)
-
-    
-
-if __name__ == "__main__":
-    asyncio.run(main())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ############################# AI Chatbot Agent Integrate with Next JS Website #############################
-
 # import os
-# import chainlit as cl
-# from agents import Agent, Runner, AsyncOpenAI ,OpenAIChatCompletionsModel, function_tool, RunConfig, RunContextWrapper
+# from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, set_default_openai_client
+# import asyncio # Important: import asyncio for running async functions
+# import nest_asyncio # Import nest_asyncio to handle nested event loops
+# from agents.run import RunConfig
 # from dotenv import load_dotenv, find_dotenv
-# from tools.function_tools import product_info
-# import nest_asyncio
-# nest_asyncio.apply() 
+# nest_asyncio.apply()
 # load_dotenv(find_dotenv())
 
 # gemini_api_key = os.getenv("GEMINI_API_KEY")
 # if not gemini_api_key:
-#     raise ValueError("GEMINI_API_KEY environment variable is not set.")
+#     raise ValueError("GEMINI_API_KEY is not set in the environment variables.")
+
 
 # # Provider
 # external_provider = AsyncOpenAI(
@@ -388,72 +242,113 @@ if __name__ == "__main__":
 #     base_url = "https://generativelanguage.googleapis.com/v1beta/openai/",
 # )
 
+
 # # Model
 # model = OpenAIChatCompletionsModel(
-#     model="gemini-2.5-flash",
-#     openai_client=external_provider,
+#     model = "gemini-2.5-flash",
+#     openai_client = external_provider,
 # )
 
-# run_config = RunConfig(
-#     model=model,
-#     model_provider=external_provider,
+# config = RunConfig(
+#     model = model,
+#     model_provider = external_provider,
 #     tracing_disabled=True,
 # )
 
 
+# @function_tool
+# def get_ai_update(query: str) -> str:
+#     print(f"Received query: {query}")
+#     """
+#     Function to get the latest AI updates.
+#     """
+#     return f"The latest AI update for is that AI is rapidly evolving with advancements in natural language processing and machine learning, enabling more sophisticated applications across various industries."
+
+# @function_tool
+# def get_blockchain_info(query: str) -> str:
+#     """
+#     Function to get blockchain-related information.
+#     """
+#     return f"Blockchain technology is revolutionizing industries by providing secure, transparent, and decentralized solutions. It is widely used in finance, supply chain, and digital identity management."
 
 
-
-# # Products Agent
-# products_agent = Agent(
-#     name="Products_Agent",
-#     instructions="You are a specialized agent for product-related all queries. You can provide information about products, their features, price of each product and specifications.",
-#     model=model,
-#     tools=[product_info]
-# )
-
-# # Website Overview Agent
-# website_overview_agent = Agent(
-#     name="Website_Overview_Agent",
-#     instructions="You are a specialized agent for website overview queries. You can provide all website information, all overview and details.",
-#     model=model,
-# )
-
-# # Payment Agent
-# payment_agent = Agent(
-#     name="Payment_Agent",
-#     instructions="You are a specialized agent for payment-related queries. You can provide information about payment methods, payment status, and any payment-related issues.",
-#     model=model,
+# @function_tool
+# def get_cyber_security_tips(query: str) -> str:
+#     """
+#     Function to provide cyber security tips.
+#     """
+#     return "To enhance your cyber security, always use strong passwords, enable two-factor authentication, keep your software updated, and be cautious of phishing attempts."
     
+
+
+# # AI Agent
+# ai_agent = Agent(
+#     name = "AI_Agent",
+#     instructions = "You are a specialized agent for Artifical Intelligence queries.",
+#     model = model,
 # )
 
+# # Block Chain Agent
+# block_chain_agent = Agent(
+#     name = "Block_Chain_Agent",
+#     instructions = "You are a specialized agent for Block Chain queries.",
+#     model = model,
+# )
 
-# # AI Chatbot Orschestrator Agent
-# ai_chatbot_agent = Agent(
-#     name = "AI_Chatbot_Agent",
-#     instructions = "You are a help full assistant of AI Chatbot, You have a tools and agents to solve user queries",
-#     model=model,
-#     tools = [
-#         products_agent.as_tool(
-#             tool_name="Products_Agent",
-#             tool_description="You are a specialized agent for product-related queries. You can provide information about products, their features, price of each product and specifications.",
+# # Cyber Agent
+# cyber_agent = Agent(
+#     name = "Cyber_Agent",
+#     instructions = "You are a specialized agent for cyber security queries.",
+#     model = model,
+# )
+
+# # Agent
+# orchestrator_agent = Agent(
+#     name = "orchestrator_agent",
+#     instructions = "You are a orchestrator agent have a agents-tool to use it accordingly to the user need",
+#     tools=[
+#         ai_agent.as_tool(
+#             tool_name = "AI_Agent",
+#             tool_description = "You are a ai agent to solve ai related queries",
 #         ),
-#         website_overview_agent.as_tool(
-#             tool_name="Website_Overview_Agent",
-#             tool_description="You are a specialized agent for website overview queries. You can provide all website information, all overview and details.",
+#         block_chain_agent.as_tool(
+#             tool_name = "Block_Chain_Agent",
+#             tool_description = "You are a block chain agent to solve block chain related queries",
 #         ),
-#         payment_agent.as_tool(
-#             tool_name="Payment_Agent",
-#             tool_description="You are a specialized agent for payment-related queries. You can provide information about payment methods, payment status, and any payment-related issues.",
+#         cyber_agent.as_tool(
+#             tool_name = "Cyber_Agent",
+#             tool_description = "You are a cyber agent to solve cyber security related queries",
 #         ),
 #     ],
 # )
 
 
-# @cl.on_message
-# async def handle_message(message: cl.Message):
-#     result = await Runner.run(ai_chatbot_agent, message.content, run_config=run_config)
-#     await cl.Message(content=f"Response: {result.final_output}").send()
-#     print(f"Response:{result.final_output}")  # Uncomment to print the final output in the console
+# # Runner
+# async def main():
+#     result = await Runner.run(orchestrator_agent, "What is the block chain Intelligence and cyber security give me in seperatly", run_config=config)
+#     print(result.final_output)
 
-# dir(result)  # Uncomment to inspect the result object in the console
+    
+
+# if __name__ == "__main__":
+#     asyncio.run(main())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
